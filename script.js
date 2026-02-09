@@ -1,15 +1,3 @@
-/* =======================
-   CONFIG
-======================= */
-
-const customerName = "Sevgilim 💖";
-const autoDuration = 5000; // ms
-const themes = ["theme-romantic","theme-pastel","theme-neon","theme-dark"];
-
-/* =======================
-   ELEMENTS
-======================= */
-
 const data = window.ALBUM_DATA || [];
 
 const startScreen = document.getElementById("startScreen");
@@ -17,88 +5,71 @@ const startBtn = document.getElementById("startBtn");
 const player = document.getElementById("player");
 const storyImage = document.getElementById("storyImage");
 const overlayText = document.getElementById("overlayText");
-const overlayFX = document.getElementById("overlayFX");
 const storyBars = document.getElementById("storyBars");
-const customerNameEl = document.getElementById("customerName");
 const soundToggle = document.getElementById("soundToggle");
 const themeToggle = document.getElementById("themeToggle");
 const bgMusic = document.getElementById("bgMusic");
-
 const finalScreen = document.getElementById("finalScreen");
 const replayBtn = document.getElementById("replayBtn");
 const shareBtn = document.getElementById("shareBtn");
-
-/* =======================
-   STATE
-======================= */
+const sparkles = document.getElementById("sparkles");
 
 let current = 0;
 let interval = null;
-let isMuted = false;
+let muted = false;
 let themeIndex = 0;
+const themes = ["theme-romantic", "theme-dark", "theme-pastel", "theme-neon"];
 
-/* =======================
-   INIT
-======================= */
+/* ---------- INIT ---------- */
+function init() {
+  if (!data.length) {
+    alert("manifest.js boş veya yüklenemedi!");
+    return;
+  }
+  buildBars();
+}
 
-customerNameEl.textContent = customerName;
-document.getElementById("albumTitle").textContent = customerName;
-
-/* =======================
-   BUILD UI
-======================= */
-
+/* ---------- STORY BARS ---------- */
 function buildBars() {
   storyBars.innerHTML = "";
   data.forEach(() => {
     const span = document.createElement("span");
-    const fill = document.createElement("div");
-    span.appendChild(fill);
+    const inner = document.createElement("div");
+    span.appendChild(inner);
     storyBars.appendChild(span);
   });
 }
 
-function resetBars() {
-  [...storyBars.children].forEach(bar => {
-    bar.classList.remove("active");
-    bar.firstChild.style.transition = "none";
-    bar.firstChild.style.width = "0%";
-  });
-}
-
-/* =======================
-   STORY ENGINE
-======================= */
-
-function showStory(index) {
-  current = index;
-  const item = data[index];
-
+/* ---------- SHOW STORY ---------- */
+function showStory(i) {
+  current = i;
+  const item = data[i];
   storyImage.src = item.src;
   overlayText.textContent = item.text || "";
-
-  resetBars();
-  const bar = storyBars.children[index];
-  bar.classList.add("active");
-
-  animateBar(bar.firstChild);
-  spawnFX();
+  animateBar(i);
+  sparkleBurst();
 }
 
-function animateBar(el) {
-  el.style.transition = "none";
-  el.style.width = "0%";
+/* ---------- BAR ANIMATION ---------- */
+function animateBar(i) {
+  [...storyBars.children].forEach((bar, idx) => {
+    bar.firstChild.style.transition = "none";
+    bar.firstChild.style.width = idx < i ? "100%" : "0%";
+  });
+
+  const bar = storyBars.children[i].firstChild;
   requestAnimationFrame(() => {
-    el.style.transition = `width ${autoDuration}ms linear`;
-    el.style.width = "100%";
+    bar.style.transition = "width 4.5s linear";
+    bar.style.width = "100%";
   });
 }
 
+/* ---------- NAV ---------- */
 function next() {
   clearInterval(interval);
   if (current < data.length - 1) {
     showStory(current + 1);
-    interval = setInterval(next, autoDuration);
+    interval = setInterval(next, 4500);
   } else {
     endStory();
   }
@@ -106,93 +77,70 @@ function next() {
 
 function prev() {
   clearInterval(interval);
-  if (current > 0) {
-    showStory(current - 1);
-    interval = setInterval(next, autoDuration);
-  }
+  if (current > 0) showStory(current - 1);
+  interval = setInterval(next, 4500);
 }
 
-function startStory() {
-  buildBars();
-  showStory(0);
-  interval = setInterval(next, autoDuration);
-  bgMusic.play().catch(()=>{});
-}
-
+/* ---------- FINAL ---------- */
 function endStory() {
   clearInterval(interval);
   finalScreen.classList.remove("hidden");
 }
 
-/* =======================
-   FX SYSTEM
-======================= */
-
-function spawnFX() {
-  overlayFX.innerHTML = "";
-
-  const count = 6 + Math.floor(Math.random() * 6);
-  for (let i = 0; i < count; i++) {
-    if (Math.random() > 0.5) spawnHeart();
-    else spawnSparkle();
-  }
-}
-
-function spawnHeart() {
-  const el = document.createElement("div");
-  el.className = "heart";
-  el.textContent = "💖";
-  el.style.left = Math.random() * 90 + "%";
-  el.style.bottom = Math.random() * 20 + "%";
-  overlayFX.appendChild(el);
-  setTimeout(() => el.remove(), 1800);
-}
-
-function spawnSparkle() {
-  const el = document.createElement("div");
-  el.className = "sparkle";
-  el.style.left = Math.random() * 100 + "%";
-  el.style.top = Math.random() * 100 + "%";
-  overlayFX.appendChild(el);
-  setTimeout(() => el.remove(), 1200);
-}
-
-/* =======================
-   EVENTS
-======================= */
-
+/* ---------- START ---------- */
 startBtn.onclick = () => {
-  startScreen.style.display = "none";
+  startScreen.classList.add("hidden");
   player.classList.remove("hidden");
-  startStory();
+  showStory(0);
+  interval = setInterval(next, 4500);
+  bgMusic.volume = 0.4;
+  bgMusic.play().catch(()=>{});
 };
 
-document.querySelector(".nav.right").onclick = next;
-document.querySelector(".nav.left").onclick = prev;
+/* ---------- REPLAY ---------- */
+replayBtn.onclick = () => {
+  finalScreen.classList.add("hidden");
+  showStory(0);
+  interval = setInterval(next, 4500);
+};
 
+/* ---------- SHARE ---------- */
+shareBtn.onclick = () => {
+  navigator.share?.({
+    title: "💖 Dijital Albüm",
+    text: "Benim için hazırlanmış albüme bak 💌",
+    url: location.href
+  }) || alert("Paylaşım desteklenmiyor.");
+};
+
+/* ---------- SOUND ---------- */
 soundToggle.onclick = () => {
-  isMuted = !isMuted;
-  bgMusic.muted = isMuted;
-  soundToggle.textContent = isMuted ? "🔇" : "🔊";
+  muted = !muted;
+  bgMusic.muted = muted;
+  soundToggle.textContent = muted ? "🔇" : "🔊";
 };
 
+/* ---------- THEME ---------- */
 themeToggle.onclick = () => {
   themeIndex = (themeIndex + 1) % themes.length;
   document.body.className = themes[themeIndex];
 };
 
-replayBtn.onclick = () => {
-  finalScreen.classList.add("hidden");
-  startStory();
-};
+/* ---------- CLICK AREAS ---------- */
+document.querySelector(".nav.right").onclick = next;
+document.querySelector(".nav.left").onclick = prev;
 
-shareBtn.onclick = async () => {
-  if (navigator.share) {
-    await navigator.share({
-      title: "Animasyonlu Albüm",
-      url: window.location.href
-    });
-  } else {
-    alert("Linki kopyalayarak paylaşabilirsiniz 💖");
+/* ---------- SPARKLES ---------- */
+function sparkleBurst() {
+  for (let i = 0; i < 5; i++) {
+    const s = document.createElement("div");
+    s.className = "sparkle";
+    s.textContent = "✨";
+    s.style.left = Math.random() * 100 + "%";
+    s.style.top = 40 + Math.random() * 30 + "%";
+    sparkles.appendChild(s);
+    setTimeout(() => s.remove(), 1000);
   }
-};
+}
+
+init();
