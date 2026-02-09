@@ -2,16 +2,17 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Animasyonlu Dijital Albüm</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-romantic">
 
-<!-- START SCREEN -->
-<div id="startScreen" class="screen active">
+<!-- BAŞLANGIÇ -->
+<div id="startScreen" class="overlay active">
   <div class="start-card">
-    <h1 id="albumTitle">Animasyonlu Albüm</h1>
+    <h1 id="albumTitle">💖 Dijital Albüm</h1>
+    <p id="albumSubtitle">Senin için hazırlandı 💌</p>
     <button id="startBtn">Başla</button>
   </div>
 </div>
@@ -19,11 +20,11 @@
 <!-- PLAYER -->
 <div id="player" class="hidden">
 
-  <!-- TOP BAR -->
+  <!-- ÜST BAR -->
   <div class="top-bar">
     <div id="storyBars" class="story-bars"></div>
-    <div class="top-controls">
-      <span id="customerName"></span>
+    <div class="top-row">
+      <div id="customerName" class="name">💖 Aşkım</div>
       <div class="controls">
         <button id="soundToggle">🔊</button>
         <button id="themeToggle">🎨</button>
@@ -31,23 +32,21 @@
     </div>
   </div>
 
-  <!-- STORY AREA -->
-  <div id="storyArea">
-    <img id="storyImage">
+  <!-- STORY ALANI -->
+  <div id="storyArea" class="story-area">
+    <img id="storyImage" draggable="false"/>
     <div id="overlayText" class="overlay-text"></div>
-    <div id="overlayFX"></div>
+    <div id="sparkles"></div>
     <div class="nav left"></div>
     <div class="nav right"></div>
   </div>
 
-  <!-- FINAL SCREEN -->
+  <!-- FINAL -->
   <div id="finalScreen" class="final hidden">
     <h2>🎁 Sürpriz!</h2>
-    <p>Bu albüm senin için hazırlandı 💖</p>
-    <div class="final-buttons">
-      <button id="replayBtn">Tekrar İzle</button>
-      <button id="shareBtn">Paylaş</button>
-    </div>
+    <p>Seni çok seviyorum 💖</p>
+    <button id="replayBtn">Tekrar İzle</button>
+    <button id="shareBtn">Paylaş</button>
   </div>
 
 </div>
