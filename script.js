@@ -1,10 +1,31 @@
-const customerName = "Sevgili Albüm";
+/* =====================
+   CONFIG (EDIT HERE)
+===================== */
 
-const images = window.ALBUM_IMAGES || [];
+const customerName = "Ayşe ❤️ Mehmet";
+
+const images = [
+  "images/1.jpg",
+  "images/2.jpg",
+  "images/3.jpg",
+  "images/4.jpg",
+  "images/5.jpg"
+];
+
+const captions = [
+  "İlk günkü gibi ❤️",
+  "Bu anı asla unutamam 🥹",
+  "En güzel gülüşün 😍",
+  "Sen benim mucizemsin ✨",
+  "Hikayemizin en güzel karesi 💖"
+];
+
+/* ===================== */
+
 let current = 0;
 let interval;
 let isMuted = false;
-let themes = ["theme-romantic","theme-pastel","theme-neon","theme-dark"];
+let themes = ["romantic", "pastel", "neon", "dark"];
 let themeIndex = 0;
 
 const startScreen = document.getElementById("startScreen");
@@ -19,57 +40,115 @@ const themeToggle = document.getElementById("themeToggle");
 const bgMusic = document.getElementById("bgMusic");
 
 customerNameEl.textContent = customerName;
-document.getElementById("title").textContent = `${customerName} 📸`;
+document.getElementById("title").textContent = customerName + "’in Hikayesi";
 
 function buildBars() {
   storyBars.innerHTML = "";
   images.forEach(() => {
     const span = document.createElement("span");
-    span.innerHTML = "<div></div>";
     storyBars.appendChild(span);
   });
 }
 
-function showStory(i) {
-  current = i;
-  storyImage.src = images[i];
-  overlayText.textContent = `Fotoğraf ${i+1} / ${images.length}`;
-  animateBar(i);
+function updateBars() {
+  [...storyBars.children].forEach((bar, i) => {
+    bar.style.setProperty("--progress", "0%");
+    bar.querySelector("::after");
+    bar.classList.remove("active");
+    bar.querySelector?.("::after");
+    if (i < current) {
+      bar.style.setProperty("--width", "100%");
+      bar.style.setProperty("--progress", "100%");
+      bar.style.setProperty("background", "var(--accent)");
+      bar.firstChild?.style?.setProperty("width", "100%");
+    }
+  });
+
+  const active = storyBars.children[current];
+  if (active) {
+    active.querySelector?.("::after");
+  }
 }
 
-function animateBar(i) {
-  const fill = storyBars.children[i].firstChild;
-  fill.style.width = "0";
-  setTimeout(() => {
-    fill.style.transition = "width 5s linear";
-    fill.style.width = "100%";
-  }, 20);
+function fillBar(index) {
+  const bar = storyBars.children[index];
+  const inner = bar.querySelector("::after");
+}
+
+function showStory(index) {
+  current = index;
+  storyImage.src = images[current];
+  overlayText.textContent = captions[current] || "";
+  overlayText.classList.add("show");
+  setTimeout(() => overlayText.classList.remove("show"), 1800);
+
+  animateBars();
+}
+
+function animateBars() {
+  [...storyBars.children].forEach((bar, i) => {
+    bar.innerHTML = "";
+    const fill = document.createElement("div");
+    fill.style.height = "100%";
+    fill.style.width = i < current ? "100%" : "0%";
+    fill.style.background = "var(--accent)";
+    fill.style.borderRadius = "999px";
+    fill.style.transition = "width linear";
+    bar.appendChild(fill);
+  });
+
+  const activeFill = storyBars.children[current].firstChild;
+  activeFill.style.transitionDuration = "6s";
+  setTimeout(() => activeFill.style.width = "100%", 20);
 }
 
 function next() {
-  clearInterval(interval);
-  if (current < images.length - 1) showStory(current+1);
-  else endStory();
-  interval = setInterval(next,5000);
+  heartBurst();
+  if (current < images.length - 1) {
+    showStory(current + 1);
+    restartInterval();
+  } else {
+    endStory();
+  }
 }
 
 function prev() {
+  if (current > 0) {
+    showStory(current - 1);
+    restartInterval();
+  }
+}
+
+function restartInterval() {
   clearInterval(interval);
-  if (current > 0) showStory(current-1);
-  interval = setInterval(next,5000);
+  interval = setInterval(next, 6000);
+}
+
+function heartBurst() {
+  for (let i = 0; i < 6; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.textContent = "❤️";
+    heart.style.left = Math.random() * 100 + "%";
+    heart.style.bottom = "40px";
+    heart.style.fontSize = 16 + Math.random() * 12 + "px";
+    document.getElementById("storyArea").appendChild(heart);
+    setTimeout(() => heart.remove(), 1500);
+  }
 }
 
 function endStory() {
   clearInterval(interval);
-  overlayText.textContent = "Son fotoğraf 🎁";
+  overlayText.textContent = "Hikayemiz burada bitmedi... ❤️";
+  overlayText.classList.add("show");
 }
 
 startBtn.onclick = () => {
-  startScreen.style.display = "none";
+  startScreen.classList.add("hidden");
   player.classList.remove("hidden");
   buildBars();
   showStory(0);
-  interval = setInterval(next,5000);
+  interval = setInterval(next, 6000);
   bgMusic.play().catch(() => {});
 };
 
@@ -83,6 +162,6 @@ soundToggle.onclick = () => {
 };
 
 themeToggle.onclick = () => {
-  themeIndex = (themeIndex+1) % themes.length;
-  document.body.className = themes[themeIndex];
+  themeIndex = (themeIndex + 1) % themes.length;
+  document.body.className = "theme-" + themes[themeIndex];
 };
