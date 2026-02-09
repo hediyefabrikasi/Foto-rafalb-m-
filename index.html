@@ -2,545 +2,59 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Animasyonlu Dijital Albüm</title>
-
-  <style>
-    :root {
-      --bg1:#ff758c;
-      --bg2:#ff7eb3;
-      --accent:#ff3b6f;
-      --panel:#ffffff;
-      --text:#ffffff;
-    }
-
-    body.dark {
-      --bg1:#0f0f0f;
-      --bg2:#1f1f1f;
-      --accent:#f472b6;
-      --panel:#111;
-      --text:#fff;
-    }
-
-    body.pastel {
-      --bg1:#c7d2fe;
-      --bg2:#fbcfe8;
-      --accent:#7c3aed;
-      --panel:#fff;
-      --text:#fff;
-    }
-
-    body.neon {
-      --bg1:#020024;
-      --bg2:#090979;
-      --accent:#00ffff;
-      --panel:#020024;
-      --text:#00ffff;
-    }
-
-    * {
-      box-sizing:border-box;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html,body {
-      margin:0;
-      padding:0;
-      height:100%;
-      overflow:hidden;
-      background:linear-gradient(135deg,var(--bg1),var(--bg2));
-    }
-
-    .app {
-      width:100%;
-      height:100%;
-      position:relative;
-      color:var(--text);
-      overflow:hidden;
-    }
-
-    /* ---------- TOP BAR ---------- */
-    .top {
-      position:absolute;
-      top:10px;
-      left:10px;
-      right:10px;
-      z-index:10;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-
-    .progress {
-      display:flex;
-      gap:4px;
-    }
-
-    .progress span {
-      flex:1;
-      height:4px;
-      background:rgba(255,255,255,0.3);
-      border-radius:999px;
-      overflow:hidden;
-    }
-
-    .progress span i {
-      display:block;
-      height:100%;
-      width:0%;
-      background:white;
-      transition:width 0.1s linear;
-    }
-
-    .top-row {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      font-size:13px;
-      font-weight:700;
-    }
-
-    .pill {
-      background:rgba(0,0,0,0.25);
-      padding:6px 12px;
-      border-radius:999px;
-      backdrop-filter: blur(10px);
-    }
-
-    .controls {
-      display:flex;
-      gap:6px;
-    }
-
-    .mini-btn {
-      background:rgba(0,0,0,0.25);
-      border:none;
-      color:white;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:700;
-      cursor:pointer;
-      backdrop-filter: blur(10px);
-    }
-
-    /* ---------- STORY ---------- */
-    .story-container {
-      width:100%;
-      height:100%;
-      position:relative;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-    }
-
-    .story {
-      width:100%;
-      height:100%;
-      position:absolute;
-      inset:0;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      opacity:0;
-      transform:scale(1.03);
-      transition:opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    .story.active {
-      opacity:1;
-      transform:scale(1);
-      z-index:2;
-    }
-
-    .story img {
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
-
-    /* ---------- OVERLAY TEXT ---------- */
-    .caption {
-      position:absolute;
-      bottom:70px;
-      left:50%;
-      transform:translateX(-50%);
-      background:rgba(0,0,0,0.45);
-      padding:12px 18px;
-      border-radius:999px;
-      font-size:14px;
-      font-weight:600;
-      max-width:90%;
-      text-align:center;
-      backdrop-filter: blur(8px);
-      animation:fadeUp 0.6s ease;
-    }
-
-    @keyframes fadeUp {
-      from {opacity:0; transform:translate(-50%,10px);}
-      to {opacity:1; transform:translate(-50%,0);}
-    }
-
-    /* ---------- TAP AREAS ---------- */
-    .tap {
-      position:absolute;
-      top:0;
-      bottom:0;
-      width:50%;
-      z-index:5;
-    }
-
-    .tap.left { left:0; }
-    .tap.right { right:0; }
-
-    /* ---------- HEARTS ---------- */
-    .heart {
-      position:absolute;
-      font-size:18px;
-      animation:floatUp 1s ease-out forwards;
-      pointer-events:none;
-      z-index:20;
-    }
-
-    @keyframes floatUp {
-      0% {transform:translateY(0) scale(0.8); opacity:1;}
-      100% {transform:translateY(-60px) scale(1.5); opacity:0;}
-    }
-
-    /* ---------- FINAL SCREEN ---------- */
-    .final {
-      position:absolute;
-      inset:0;
-      background:linear-gradient(135deg,var(--bg1),var(--bg2));
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      z-index:20;
-      flex-direction:column;
-      gap:16px;
-      text-align:center;
-      padding:24px;
-      animation:fadeIn 0.6s ease;
-    }
-
-    @keyframes fadeIn {
-      from {opacity:0; transform:scale(0.96);}
-      to {opacity:1; transform:scale(1);}
-    }
-
-    .final h2 {
-      margin:0;
-      font-size:24px;
-    }
-
-    .final p {
-      margin:0;
-      font-size:15px;
-      opacity:0.9;
-    }
-
-    .final .actions {
-      display:flex;
-      gap:10px;
-      margin-top:8px;
-    }
-
-    .final button {
-      border:none;
-      padding:12px 18px;
-      border-radius:999px;
-      font-weight:800;
-      cursor:pointer;
-      background:white;
-      color:var(--accent);
-      box-shadow:0 8px 20px rgba(0,0,0,0.25);
-    }
-
-    /* ---------- INTRO ---------- */
-    .intro {
-      position:absolute;
-      inset:0;
-      background:linear-gradient(135deg,var(--bg1),var(--bg2));
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      z-index:30;
-      flex-direction:column;
-      gap:16px;
-      text-align:center;
-      padding:24px;
-    }
-
-    .intro h2 {
-      margin:0;
-      font-size:24px;
-    }
-
-    .intro p {
-      margin:0;
-      font-size:15px;
-      opacity:0.9;
-    }
-
-    .intro button {
-      border:none;
-      padding:14px 22px;
-      border-radius:999px;
-      font-weight:800;
-      cursor:pointer;
-      background:white;
-      color:var(--accent);
-      box-shadow:0 8px 20px rgba(0,0,0,0.25);
-    }
-
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="romantic">
+<body class="theme-romantic">
 
-<div class="app">
-
-  <!-- INTRO -->
-  <div id="intro" class="intro">
-    <h2>💌 Sürprizin Hazır!</h2>
-    <p id="introText"></p>
-    <button onclick="startStory()">Albümü Aç</button>
+<!-- START SCREEN -->
+<div id="startScreen" class="screen active">
+  <div class="start-card">
+    <h1 id="albumTitle">Animasyonlu Albüm</h1>
+    <button id="startBtn">Başla</button>
   </div>
+</div>
+
+<!-- PLAYER -->
+<div id="player" class="hidden">
 
   <!-- TOP BAR -->
-  <div class="top">
-    <div class="progress" id="progressBar"></div>
-    <div class="top-row">
-      <div class="pill">💖 <span id="loverName"></span></div>
+  <div class="top-bar">
+    <div id="storyBars" class="story-bars"></div>
+    <div class="top-controls">
+      <span id="customerName"></span>
       <div class="controls">
-        <button class="mini-btn" onclick="toggleSound()">🔊</button>
-        <button class="mini-btn" onclick="changeTheme()">🎨</button>
+        <button id="soundToggle">🔊</button>
+        <button id="themeToggle">🎨</button>
       </div>
     </div>
   </div>
 
-  <!-- STORIES -->
-  <div id="storyContainer" class="story-container"></div>
+  <!-- STORY AREA -->
+  <div id="storyArea">
+    <img id="storyImage">
+    <div id="overlayText" class="overlay-text"></div>
+    <div id="overlayFX"></div>
+    <div class="nav left"></div>
+    <div class="nav right"></div>
+  </div>
 
-  <!-- TAP AREAS -->
-  <div class="tap left" onclick="prevStory()"></div>
-  <div class="tap right" onclick="nextStory()"></div>
-
-  <!-- FINAL -->
-  <div id="finalScreen" class="final" style="display:none;">
-    <h2>🎁 Sana Bir Mesajım Var</h2>
-    <p id="finalMessage"></p>
-    <div class="actions">
-      <button onclick="restart()">Baştan İzle</button>
-      <button onclick="copyLink()">Paylaş</button>
+  <!-- FINAL SCREEN -->
+  <div id="finalScreen" class="final hidden">
+    <h2>🎁 Sürpriz!</h2>
+    <p>Bu albüm senin için hazırlandı 💖</p>
+    <div class="final-buttons">
+      <button id="replayBtn">Tekrar İzle</button>
+      <button id="shareBtn">Paylaş</button>
     </div>
   </div>
 
 </div>
 
-<!-- AUDIO -->
-<audio id="bgMusic" src="music/bg.mp3" loop></audio>
-<audio id="tapSound" src="music/tap.mp3"></audio>
-<audio id="heartSound" src="music/heart.mp3"></audio>
+<audio id="bgMusic" src="audio/bg.mp3" loop></audio>
 
-<script>
-/* ============================
-   🔧 SATIŞ İÇİN AYARLAR
-============================ */
-
-// 👉 MÜŞTERİ ADI
-const CUSTOMER_NAME = "Umut";
-
-// 👉 FOTOĞRAFLAR (PIXAR STİLİNE ÇEVRİLMİŞ)
-const images = [
-  "images/1.jpg",
-  "images/2.jpg",
-  "images/3.jpg",
-  "images/4.jpg",
-  "images/5.jpg"
-];
-
-// 👉 HER FOTOĞRAF ALT YAZISI
-const captions = [
-  "Bu gün kalbime kazındı 💖",
-  "Gülüşün dünyamı aydınlatıyor ✨",
-  "İyi ki varsın aşkım 🥹",
-  "Bu an sonsuza kadar bizim 💕",
-  "Hayatımın en güzel hikayesi sensin 💌"
-];
-
-// 👉 FINAL MESAJ
-const FINAL_MESSAGE = "Seni her gün ilk günkü gibi seviyorum 💖";
-
-// 👉 STORY SÜRESİ (ms)
-const STORY_DURATION = 4500;
-
-// 👉 TEMA LİSTESİ
-const themes = ["romantic","pastel","dark","neon"];
-
-/* ============================
-   🎮 MOTOR
-============================ */
-
-let current = 0;
-let timer = null;
-let progressTimer = null;
-let soundOn = true;
-let themeIndex = 0;
-
-const loverNameEl = document.getElementById("loverName");
-const introText = document.getElementById("introText");
-const storyContainer = document.getElementById("storyContainer");
-const progressBar = document.getElementById("progressBar");
-const finalScreen = document.getElementById("finalScreen");
-const finalMessageEl = document.getElementById("finalMessage");
-
-const bgMusic = document.getElementById("bgMusic");
-const tapSound = document.getElementById("tapSound");
-const heartSound = document.getElementById("heartSound");
-
-/* ---------- INIT ---------- */
-loverNameEl.textContent = CUSTOMER_NAME;
-introText.innerHTML = `Sevgilim <strong>${CUSTOMER_NAME}</strong>,<br>senin için özel hazırlanmış bu albümü açmaya hazır mısın? 💖`;
-finalMessageEl.textContent = FINAL_MESSAGE;
-
-function setup() {
-  images.forEach((src, i) => {
-    const div = document.createElement("div");
-    div.className = "story";
-    div.innerHTML = `
-      <img src="${src}" />
-      <div class="caption">${captions[i] || ""}</div>
-    `;
-    storyContainer.appendChild(div);
-
-    const bar = document.createElement("span");
-    bar.innerHTML = "<i></i>";
-    progressBar.appendChild(bar);
-  });
-}
-
-setup();
-
-/* ---------- START ---------- */
-function startStory() {
-  document.getElementById("intro").style.display = "none";
-  showStory(0);
-
-  if (soundOn) {
-    bgMusic.volume = 0.35;
-    bgMusic.play();
-  }
-}
-
-/* ---------- STORY CONTROL ---------- */
-function showStory(index) {
-  clearTimers();
-  const stories = document.querySelectorAll(".story");
-  const bars = document.querySelectorAll(".progress span i");
-
-  stories.forEach(s => s.classList.remove("active"));
-  bars.forEach(b => b.style.width = "0%");
-
-  if (index >= stories.length) {
-    endStory();
-    return;
-  }
-
-  if (index < 0) index = 0;
-
-  current = index;
-  stories[current].classList.add("active");
-  animateProgress(current);
-
-  spawnHearts();
-
-  timer = setTimeout(() => {
-    nextStory();
-  }, STORY_DURATION);
-}
-
-function nextStory() {
-  if (soundOn) {
-    tapSound.currentTime = 0;
-    tapSound.play();
-  }
-  showStory(current + 1);
-}
-
-function prevStory() {
-  if (soundOn) {
-    tapSound.currentTime = 0;
-    tapSound.play();
-  }
-  showStory(current - 1);
-}
-
-function clearTimers() {
-  clearTimeout(timer);
-  clearInterval(progressTimer);
-}
-
-/* ---------- PROGRESS ---------- */
-function animateProgress(index) {
-  const bar = document.querySelectorAll(".progress span i")[index];
-  let width = 0;
-  progressTimer = setInterval(() => {
-    width += 100 / (STORY_DURATION / 100);
-    bar.style.width = width + "%";
-    if (width >= 100) clearInterval(progressTimer);
-  }, 100);
-}
-
-/* ---------- FINAL ---------- */
-function endStory() {
-  clearTimers();
-  bgMusic.pause();
-  finalScreen.style.display = "flex";
-}
-
-/* ---------- EXTRA EFFECTS ---------- */
-function spawnHearts() {
-  if (soundOn) {
-    heartSound.currentTime = 0;
-    heartSound.play();
-  }
-
-  for (let i = 0; i < 6; i++) {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.textContent = "💖";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.top = "70%";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 1000);
-  }
-}
-
-/* ---------- TOGGLES ---------- */
-function toggleSound() {
-  soundOn = !soundOn;
-  if (!soundOn) bgMusic.pause();
-  else bgMusic.play();
-}
-
-function changeTheme() {
-  themeIndex = (themeIndex + 1) % themes.length;
-  document.body.className = themes[themeIndex];
-}
-
-/* ---------- ACTIONS ---------- */
-function restart() {
-  finalScreen.style.display = "none";
-  showStory(0);
-  if (soundOn) bgMusic.play();
-}
-
-function copyLink() {
-  navigator.clipboard.writeText(location.href);
-  alert("Link kopyalandı 💖");
-}
-</script>
-
+<script src="images/manifest.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
