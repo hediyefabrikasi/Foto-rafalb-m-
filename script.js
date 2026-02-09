@@ -3,24 +3,11 @@
 ===================== */
 
 const customerName = "Ayşe ❤️ Mehmet";
-
-const images = [
-  "images/1.jpg",
-  "images/2.jpg",
-  "images/3.jpg",
-  "images/4.jpg",
-  "images/5.jpg"
-];
-
-const captions = [
-  "İlk günkü gibi ❤️",
-  "Bu anı asla unutamam 🥹",
-  "En güzel gülüşün 😍",
-  "Sen benim mucizemsin ✨",
-  "Hikayemizin en güzel karesi 💖"
-];
+const captions = []; // Boş bırakabilirsin, otomatik çalışır
 
 /* ===================== */
+
+const images = window.ALBUM_IMAGES || [];
 
 let current = 0;
 let interval;
@@ -46,33 +33,11 @@ function buildBars() {
   storyBars.innerHTML = "";
   images.forEach(() => {
     const span = document.createElement("span");
+    const fill = document.createElement("div");
+    fill.className = "bar-fill";
+    span.appendChild(fill);
     storyBars.appendChild(span);
   });
-}
-
-function updateBars() {
-  [...storyBars.children].forEach((bar, i) => {
-    bar.style.setProperty("--progress", "0%");
-    bar.querySelector("::after");
-    bar.classList.remove("active");
-    bar.querySelector?.("::after");
-    if (i < current) {
-      bar.style.setProperty("--width", "100%");
-      bar.style.setProperty("--progress", "100%");
-      bar.style.setProperty("background", "var(--accent)");
-      bar.firstChild?.style?.setProperty("width", "100%");
-    }
-  });
-
-  const active = storyBars.children[current];
-  if (active) {
-    active.querySelector?.("::after");
-  }
-}
-
-function fillBar(index) {
-  const bar = storyBars.children[index];
-  const inner = bar.querySelector("::after");
 }
 
 function showStory(index) {
@@ -80,26 +45,20 @@ function showStory(index) {
   storyImage.src = images[current];
   overlayText.textContent = captions[current] || "";
   overlayText.classList.add("show");
-  setTimeout(() => overlayText.classList.remove("show"), 1800);
-
+  setTimeout(() => overlayText.classList.remove("show"), 1600);
   animateBars();
 }
 
 function animateBars() {
   [...storyBars.children].forEach((bar, i) => {
-    bar.innerHTML = "";
-    const fill = document.createElement("div");
-    fill.style.height = "100%";
+    const fill = bar.firstChild;
     fill.style.width = i < current ? "100%" : "0%";
-    fill.style.background = "var(--accent)";
-    fill.style.borderRadius = "999px";
-    fill.style.transition = "width linear";
-    bar.appendChild(fill);
+    fill.style.transition = "none";
   });
 
   const activeFill = storyBars.children[current].firstChild;
-  activeFill.style.transitionDuration = "6s";
-  setTimeout(() => activeFill.style.width = "100%", 20);
+  activeFill.style.transition = "width 6s linear";
+  requestAnimationFrame(() => activeFill.style.width = "100%");
 }
 
 function next() {
