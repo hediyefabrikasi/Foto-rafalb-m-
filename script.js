@@ -1,4 +1,32 @@
-const data = window.ALBUM_DATA || [];
+/* =====================
+   CONFIG (EDIT HERE)
+===================== */
+
+const customerName = "Ayşe ❤️ Mehmet";
+
+const images = [
+  "images/1.jpg",
+  "images/2.jpg",
+  "images/3.jpg",
+  "images/4.jpg",
+  "images/5.jpg"
+];
+
+const captions = [
+  "İlk günkü gibi ❤️",
+  "Bu anı asla unutamam 🥹",
+  "En güzel gülüşün 😍",
+  "Sen benim mucizemsin ✨",
+  "Hikayemizin en güzel karesi 💖"
+];
+
+/* ===================== */
+
+let current = 0;
+let interval;
+let isMuted = false;
+let themes = ["romantic", "pastel", "neon", "dark"];
+let themeIndex = 0;
 
 const startScreen = document.getElementById("startScreen");
 const startBtn = document.getElementById("startBtn");
@@ -6,128 +34,134 @@ const player = document.getElementById("player");
 const storyImage = document.getElementById("storyImage");
 const overlayText = document.getElementById("overlayText");
 const storyBars = document.getElementById("storyBars");
+const customerNameEl = document.getElementById("customerName");
 const soundToggle = document.getElementById("soundToggle");
 const themeToggle = document.getElementById("themeToggle");
 const bgMusic = document.getElementById("bgMusic");
-const finalScreen = document.getElementById("finalScreen");
-const replayBtn = document.getElementById("replayBtn");
-const shareBtn = document.getElementById("shareBtn");
-const effects = document.getElementById("effects");
 
-let current = 0;
-let interval = null;
-let muted = false;
-let themeIndex = 0;
-const themes = ["theme-romantic","theme-dark","theme-pastel","theme-neon"];
+customerNameEl.textContent = customerName;
+document.getElementById("title").textContent = customerName + "’in Hikayesi";
 
-/* ---------- INIT ---------- */
 function buildBars() {
   storyBars.innerHTML = "";
-  data.forEach(() => {
-    const s = document.createElement("span");
-    const bar = document.createElement("div");
-    s.appendChild(bar);
-    storyBars.appendChild(s);
+  images.forEach(() => {
+    const span = document.createElement("span");
+    storyBars.appendChild(span);
   });
 }
 
-function showStory(i) {
-  current = i;
-  const item = data[i];
+function updateBars() {
+  [...storyBars.children].forEach((bar, i) => {
+    bar.style.setProperty("--progress", "0%");
+    bar.querySelector("::after");
+    bar.classList.remove("active");
+    bar.querySelector?.("::after");
+    if (i < current) {
+      bar.style.setProperty("--width", "100%");
+      bar.style.setProperty("--progress", "100%");
+      bar.style.setProperty("background", "var(--accent)");
+      bar.firstChild?.style?.setProperty("width", "100%");
+    }
+  });
 
-  storyImage.src = item.src;
-  overlayText.textContent = item.text;
-  animateBar(i);
-  animateFX();
+  const active = storyBars.children[current];
+  if (active) {
+    active.querySelector?.("::after");
+  }
 }
 
-function animateBar(index) {
-  [...storyBars.children].forEach((span, idx) => {
-    const bar = span.firstChild;
-    bar.style.transition = "none";
-    bar.style.width = idx < index ? "100%" : "0%";
+function fillBar(index) {
+  const bar = storyBars.children[index];
+  const inner = bar.querySelector("::after");
+}
+
+function showStory(index) {
+  current = index;
+  storyImage.src = images[current];
+  overlayText.textContent = captions[current] || "";
+  overlayText.classList.add("show");
+  setTimeout(() => overlayText.classList.remove("show"), 1800);
+
+  animateBars();
+}
+
+function animateBars() {
+  [...storyBars.children].forEach((bar, i) => {
+    bar.innerHTML = "";
+    const fill = document.createElement("div");
+    fill.style.height = "100%";
+    fill.style.width = i < current ? "100%" : "0%";
+    fill.style.background = "var(--accent)";
+    fill.style.borderRadius = "999px";
+    fill.style.transition = "width linear";
+    bar.appendChild(fill);
   });
 
-  const activeBar = storyBars.children[index].firstChild;
-  requestAnimationFrame(() => {
-    activeBar.style.transition = "width 4s linear";
-    activeBar.style.width = "100%";
-  });
+  const activeFill = storyBars.children[current].firstChild;
+  activeFill.style.transitionDuration = "6s";
+  setTimeout(() => activeFill.style.width = "100%", 20);
 }
 
 function next() {
-  clearInterval(interval);
-  if (current < data.length - 1) {
+  heartBurst();
+  if (current < images.length - 1) {
     showStory(current + 1);
-    interval = setInterval(next, 4000);
+    restartInterval();
   } else {
     endStory();
   }
 }
 
 function prev() {
+  if (current > 0) {
+    showStory(current - 1);
+    restartInterval();
+  }
+}
+
+function restartInterval() {
   clearInterval(interval);
-  if (current > 0) showStory(current - 1);
-  interval = setInterval(next, 4000);
+  interval = setInterval(next, 6000);
+}
+
+function heartBurst() {
+  for (let i = 0; i < 6; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.textContent = "❤️";
+    heart.style.left = Math.random() * 100 + "%";
+    heart.style.bottom = "40px";
+    heart.style.fontSize = 16 + Math.random() * 12 + "px";
+    document.getElementById("storyArea").appendChild(heart);
+    setTimeout(() => heart.remove(), 1500);
+  }
 }
 
 function endStory() {
   clearInterval(interval);
-  finalScreen.classList.remove("hidden");
+  overlayText.textContent = "Hikayemiz burada bitmedi... ❤️";
+  overlayText.classList.add("show");
 }
 
 startBtn.onclick = () => {
-  if (!data.length) {
-    alert("⚠️ Fotoğraf listesi boş!");
-    return;
-  }
   startScreen.classList.add("hidden");
   player.classList.remove("hidden");
   buildBars();
   showStory(0);
-  interval = setInterval(next, 4000);
-
-  bgMusic.volume = 0.35;
-  bgMusic.play().catch(()=>{});
+  interval = setInterval(next, 6000);
+  bgMusic.play().catch(() => {});
 };
 
 document.querySelector(".nav.right").onclick = next;
 document.querySelector(".nav.left").onclick = prev;
 
 soundToggle.onclick = () => {
-  muted = !muted;
-  bgMusic.muted = muted;
-  soundToggle.textContent = muted ? "🔇" : "🔊";
+  isMuted = !isMuted;
+  bgMusic.muted = isMuted;
+  soundToggle.textContent = isMuted ? "🔇" : "🔊";
 };
 
 themeToggle.onclick = () => {
-  themeIndex = (themeIndex+1) % themes.length;
-  document.body.className = themes[themeIndex];
+  themeIndex = (themeIndex + 1) % themes.length;
+  document.body.className = "theme-" + themes[themeIndex];
 };
-
-replayBtn.onclick = () => {
-  finalScreen.classList.add("hidden");
-  showStory(0);
-  interval = setInterval(next,4000);
-};
-
-shareBtn.onclick = () => {
-  navigator.share?.({
-    title: "Animasyonlu Albüm",
-    url: location.href
-  }) || alert("Paylaş kopyalayarak!");
-};
-
-/* ---------- FX ---------- */
-function animateFX() {
-  effects.innerHTML = "";
-  for (let i = 0; i < 6; i++) {
-    const el = document.createElement("div");
-    el.className = "heart";
-    el.textContent = "💖";
-    el.style.left = Math.random()*90+"%";
-    el.style.top = Math.random()*60+"%";
-    effects.appendChild(el);
-    setTimeout(() => el.remove(), 1200);
-  }
-}
