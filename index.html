@@ -2,16 +2,17 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Animasyonlu Dijital Albüm</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body class="theme-romantic">
 
-<!-- START -->
+<!-- START SCREEN -->
 <div id="startScreen" class="screen active">
   <div class="start-card">
-    <h1 id="albumTitle">💖 Dijital Albüm</h1>
+    <h1 id="title">❤️ Ayşe & Mehmet’in Hikayesi</h1>
+    <p>Pixar tarzı animasyonlu anılarınız</p>
     <button id="startBtn">Başla</button>
   </div>
 </div>
@@ -19,10 +20,11 @@
 <!-- PLAYER -->
 <div id="player" class="hidden">
 
+  <!-- TOP BAR -->
   <div class="top-bar">
-    <div id="storyBars" class="story-bars"></div>
-    <div class="top-row">
-      <span id="customerName">💖 Aşkım</span>
+    <div class="story-bars" id="storyBars"></div>
+    <div class="top-controls">
+      <span id="customerName">Ayşe ❤️ Mehmet</span>
       <div class="controls">
         <button id="soundToggle">🔊</button>
         <button id="themeToggle">🎨</button>
@@ -30,25 +32,21 @@
     </div>
   </div>
 
+  <!-- STORY AREA -->
   <div id="storyArea">
-    <img id="storyImage" draggable="false"/>
-    <div id="overlayText" class="overlay-text"></div>
-    <div id="effects"></div>
+    <img id="storyImage" src="" alt="story" />
+    <div id="overlayText"></div>
+
+    <!-- NAV ZONES -->
     <div class="nav left"></div>
     <div class="nav right"></div>
   </div>
 
-  <div id="finalScreen" class="final hidden">
-    <h2>🎉 Albüm Bitti!</h2>
-    <p>Her anı seninle 💖</p>
-    <button id="replayBtn">Tekrar İzle</button>
-    <button id="shareBtn">Paylaş</button>
-  </div>
-
 </div>
 
+<!-- AUDIO -->
 <audio id="bgMusic" src="audio/bg.mp3" loop></audio>
-<script src="images/manifest.js"></script>
+
 <script src="script.js"></script>
 </body>
 </html>
