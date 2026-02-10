@@ -22,6 +22,7 @@ const captions = [
   "Sen benim mucizemsin ✨",
   "Sen benim mucizemsin ✨",
   "Sen benim mucizemsin ✨",
+  "Sen benim mucizemsin ✨",
   "Hikayemizin en güzel karesi 💖"
 ];
 
