@@ -9,13 +9,17 @@ const images = [
   "images/2.jpg",
   "images/3.jpg",
   "images/4.jpg",
-  "images/5.jpg"
+  "images/5.jpg",
+  "images/6.jpg",
+  "images/7.jpg"
 ];
 
 const captions = [
   "İlk günkü gibi ❤️",
   "Bu anı asla unutamam 🥹",
   "En güzel gülüşün 😍",
+  "Sen benim mucizemsin ✨",
+  "Sen benim mucizemsin ✨",
   "Sen benim mucizemsin ✨",
   "Hikayemizin en güzel karesi 💖"
 ];
