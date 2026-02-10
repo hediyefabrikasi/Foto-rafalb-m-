@@ -14,6 +14,14 @@ body {
   overflow: hidden;
 }
 
+.screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* THEMES */
 body.theme-dark {
   background: linear-gradient(135deg, #111, #333);
@@ -154,17 +162,44 @@ body.theme-neon {
 }
 
 /* STORY AREA */
-.story-area {
+#storyArea {
   width: 100%;
   height: 100%;
   position: relative;
   background: black;
 }
 
-.story-area img {
+#storyArea img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+#effects {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 7;
+}
+
+.heart {
+  position: absolute;
+  font-size: 20px;
+  animation: floatUp 1.2s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(10px) scale(0.7);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-60px) scale(1.2);
+    opacity: 0;
+  }
 }
 
 /* OVERLAY TEXT */
