@@ -12,7 +12,14 @@ const images = [
   "images/5.jpg",
   "images/6.jpg",
   "images/7.jpg",
-  "images/8.jpg"
+  "images/8.jpg",
+  "images/9.jpg",
+  "images/10.jpg",
+  "images/11.jpg",
+  "images/12.jpg",
+  "images/13.jpg",
+  "images/14.jpg",
+  "images/15.jpg"
 ];
 
 const captions = [
@@ -20,11 +27,19 @@ const captions = [
   "Bu anı asla unutamam 🥹",
   "En güzel gülüşün 😍",
   "Sen benim mucizemsin ✨",
-  "Sen benim mucizemsin ✨",
-  "Sen benim mucizemsin ✨",
-  "Sen benim mucizemsin ✨",
-  "Hikayemizin en güzel karesi 💖"
+  "Hikayemizin en güzel karesi 💖",
+  "Kalbim hep sende 💘",
+  "Gülüşün dünyamı aydınlatıyor 🌟",
+  "Seninle her şey daha güzel 🥰",
+  "Bu an sonsuza kadar bizim 💞",
+  "Aşkın en güzel hali sensin 💕",
+  "Yanımda olduğun her an özel 💫",
+  "Birlikte her şeye değer 💍",
+  "Gözlerindeki mutluluk her şeye bedel 😌",
+  "Sen benim en güzel şansımsın 🍀",
+  "İyi ki varsın, iyi ki biz 💖"
 ];
+
 
 /* ===================== */
 
